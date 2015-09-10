@@ -1,28 +1,41 @@
 <script>
-     /*--------------MULTILANGUAGE script for DUDAONE [Raw Edition]-------------------
-    This script adds a set of language flags below the social icons of a default (non-row)
-    header of a DudaOne site that display and hide pages in the navigation depending on
-    the selected flag.
+     /*----------MULTILANGUAGE script for DUDAONE [Raw Edition] README----------------
+    This script adds a set of language flags below any div to which the 
+    multiLanguageRow class is applied. In the editor, this will display as placeholder
+    text. These flags can be clicked to display and hide pages in the navigation based
+    on the page suffixes and the language associated with the selected flag.
 
-    ----------------------------------USER GUIDE--------------------------------------
+    ----------------------------HOW TO USE THIS SCRIPT--------------------------------
+    1. Create a DudaOne site with pages in the default language
+    2. Copy each of the languages from the default language (and change their content)
+    3. Re-name the page URLs for these pages (in manage pages, click the gear icon to
+    the right of each page, then go to SEO & Settings and scroll down to 'page URL') 
+    to match their parent page's URL, but followed by an underscore and then the
+    language extension. For example: home becomes home_en, about becomes about_en, etc
+    4. Paste this script into the site's header (go to menu, then site settings, then
+    header HTML)
+    5. Add the placement div <div class='multiLanguageRow'> into an HTML element on the site
+    6. Set the navigation to display 'all items'; Go to design -> navigation -> customize (under desktop) -> settings and in the 'Number of visible desktop navigation items' dropdown, select 'all items'.
+    
+    ------------------------TROUBLESHOOTING / REQUIREMENTS----------------------------
     This script should be added to the header HTML of the site.
-
-    For this script to work, the header must be set to normal (non-row), and  The 
-    social icons in the header must be set to visible. They will disappear (be replaced 
-    by) this function.
     
     For this script to work properly, it is necessary for all pages of the site to have
     equivalent pages built for each other language, following the schema: 
-    pagename_languageID, so for example home_en.
+    pagename_languageID, so for example mypage_fr.
     
     Please note that whichever language is set to 'default language' below will default
-    to page names without a language ID, so for example home.
+    to page names without a language ID, so for example mypage.
     All home pages must also have the URL schema home_languageID, or at least load at 
     that URL.
 
     If this script is used on a site on which these pages do not exist, it can cause
     a 404 error or cause the editor not to load. To fix this, clear your browser cache
     and make the pages per the above specifications.
+
+    Setting the navigation of the site to have 'All Items' displayed in the 'Number of 
+    visible navigation items' is necessary to have pages display properly.
+
     -------------------------------Customization-------------------------------------
     Add any MLV.languages you want in the 'languages' array (by suffix). They will appear
     on the site in the order they appear in this array. The default language will be
@@ -32,10 +45,12 @@
     if you wish to add additional languages, it is necessary to modify the flag 
     datagram in the CSS styles at the end of this script, as well as modify the styles
     themselves to provide the appropriate offset. 
-    ---------------------------------------------------------------------------------*/ 
 
-    /*-------------------------------Variables-----------------------------------------
-    Values used to store and set information 
+    --------------------------------END OF README------------------------------------*/
+
+    /*-------------------------------GLOBAL Variables----------------------------------
+    Values used to store and set information. These are wrapped into MLV (short for 
+    'Multi Language Variables') to conserve global namespace.
     ---------------------------------------------------------------------------------*/ 
     var MLV = {}; // multi-language variable namespace
     MLV.defaultLanguage = "en"; //this language will be assumed to have no suffix
@@ -57,7 +72,6 @@
                         "iw":"Hebrew",
                         "nl":"Dutch"
     }; // add more language definitions here
-
    
     /*------------------------cookieHandler NAMESPACE---------------------------------
     set of functions to set/read cookies to store the active language across sessions
@@ -65,12 +79,12 @@
     --------------------------------------------------------------------------------*/       
     var cookieHandler = { //function namespace
            
-        //get the cookie data from the browser
+        //FUNCTION: gets the cookie data from the browser
         getCookie: function() {
             var langCookie = document.cookie.replace(/(?:(?:^|.*;\s*)CurrLanguage\s*\=\s*([^;]*).*$)|^.*$/, "$1");
             return langCookie;
         },
-        //sets a cookie designating the current language of that user for the site
+        //FUNCTION: sets a cookie designating the current language of that user for the site
         setCookie: function(lang, days) {
             if (!days) {
                 var days = 1;
@@ -80,7 +94,7 @@
             document.cookie = "CurrLanguage=" + lang + ";expires=" + d.toGMTString() + ";path=/";
             console.log("cookie set");
         },
-        //changes page based on language selection if necessary
+        //FUNCTION: changes page based on language selection if necessary
         selectLang: function(lang) {
             console.log('Lang = ' + lang);
             if (cookieHandler.getCookie() === lang.toString()) {
@@ -91,61 +105,85 @@
                 if (basePage === '/home') {
                     basePage = '/';
                 }
-                var basePagePath = basePage + cookieHandler.getPageSuffix(parseInt(lang));
-                window.location = basePagePath;
+                var basePagePath = basePage + cookieHandler.getPageSuffix(parseInt(lang)) + 
+                window.location.search;
+                window.location.replace(basePagePath);
             }
         },
-        //get the page's suffix
+
+        /*FUNCTION: return whether or not the string ends with the suffix. If there's no suffix, return true only if the default language is enabled. */
         pageEndsWith: function(str, suffix) {
-            return str.indexOf(suffix, str.length - suffix.length) !== -1;
+            //if there is no explicit suffix and the default language is enabled
+            if(str.indexOf("_") === -1 && ( suffix === MLV.defaultLanguage || suffix === ""))
+            {
+                return true;
+            }
+            //otherwise, if the suffix matches (and default language is not enabled), 
+            //show the page
+            else if(str.indexOf("_") !== -1 && suffix !== MLV.defaultLanguage
+                && suffix !== "") 
+            {
+                return str.indexOf(suffix, str.length - suffix.length) !== -1;
+            }
+            //if neither, don't show the page.
+            else
+            {
+                return false;
+            }
         },
-        //given the language array index, return the appropriate page suffix
+        //FUNCTION: given the language array index, return the appropriate page suffix
         getPageSuffix: function(lang) {
-            if(MLV.languages[lang] == MLV.defaultLanguage || typeof lang == undefined)
+            if(MLV.languages[lang] === MLV.defaultLanguage || typeof lang === undefined)
             {
                 return "";
             }
             return "_" + MLV.languages[lang];
         },
-        //strip the _ from the suffix
+        //FUNCTION: get the parameters from the URL
+        getURLParameters: function(pagePath1) {
+            return pagePath1.split("?")[1];
+        },
+        //FUNCTION: strip the _ from the suffix
         stripPageSuffix: function(pagePath1) {
             return pagePath1.split("_")[0];
         },
-        //hide the navigation elements for the other languages
-        hideOtherLanguageNavElements: function() {
-            $('.dmNavWrapper li a').each(function() {
-                if ($(this).attr('href') != undefined) {
-                    if (!cookieHandler.pageEndsWith($(this).attr('href'), cookieHandler.getPageSuffix(parseInt(cookieHandler.getCookie())))) {
-                        $(this).parent().hide()
-                    }
-                    if (cookieHandler.getCookie() == "0") {
-                        for (var i = 1; i < MLV.languages.length; i++) {
-                            if (cookieHandler.pageEndsWith($(this).attr('href'), cookieHandler.getPageSuffix(i))) {
-                                $(this).parent().hide();
-                            }
+        //FUNCTION: show the navigation elements for the current language
+        showMatchingLanguageNavElements: function() {
+            $(document).ready(function() {
+                //once the DOM has loaded, check each navWrapper div
+                $('.dmNavWrapper li a').each(function() {
+                    if ($(this).attr('href') !== undefined) {
+                        //and if it has a href, check if it matches the current language
+                        if (cookieHandler.pageEndsWith($(this).attr('href'), cookieHandler.getPageSuffix(parseInt(cookieHandler.getCookie())))) {
+                            $(this).parents("li").css("display", "inline-block");
                         }
+                        else
+                        {
+                            //if it doesn't, keep it hidden.
+                            $(this).parents("li").css("display", "none");
+                        } 
                     }
-                }
+                });
             });
         },
-        //If there isn't yet a cookie, set one and change the URL appropriately.
+        //load the appropriate home page and language
         pageLoad: function() {
+            //If there isn't yet a cookie, set one 
             var cookieLang = parseInt(cookieHandler.getCookie());
-            if (!cookieLang) {
+            if (cookieLang === 'undefined') {
                 cookieHandler.setCookie(0);
+                console.log('Lang was undefined. Lang = 0');
             } else if (!cookieHandler.pageEndsWith(window.location.pathname, cookieHandler.getPageSuffix(cookieLang)) && cookieLang != 0) {
+                //display the appropriately home page for the language used
                 var basePage = cookieHandler.stripPageSuffix(window.location.pathname);
                 if (basePage === '/home') {
                     basePage = '/';
                 }
-                window.location = basePage + cookieHandler.getPageSuffix(cookieLang);
+                var basePagePath = basePage + cookieHandler.getPageSuffix(cookieLang) + 
+                window.location.search;
+                window.location.replace(basePagePath);
             }
-            if ($('.dmDudaonePreviewBody')) {
-                $(document).ready(function() {
-                    cookieHandler.hideOtherLanguageNavElements();
-                });
-            }
-
+            cookieHandler.showMatchingLanguageNavElements();
         },
         //generates the HTML structure for the clickable flags
         generateLanguageFlagsHTML: function() {
@@ -174,25 +212,52 @@
     /*------------------------Main Function-------------------------------------------
     Sets all of the above functions into motion so they do something on the page.
     --------------------------------------------------------------------------------*/ 
-    //add the language interface on page load
-    cookieHandler.pageLoad();
-    $(function() {
-        console.log($('body').attr('class'));
-        $('.innerSocialRow').append('<div class="language_selection_wrapper flex_align_right">' + cookieHandler.generateLanguageFlagsHTML() + '</div>');
-        $('.language_selection_wrapper').find('.language_selection_anchor').eq(parseInt(cookieHandler.getCookie())).addClass('active').attr('title', '');
-        console.log("Current Language : " + parseInt(cookieHandler.getCookie()));
-        $('body').on('click', '.language_selection_anchor', function() {
-            changeLanguage($(this));
+   //don't load if inside the editor
+    if(window.editorParent.$)
+    {
+           //show the placeholder
+        $(function(){
+            $('.multiLanguageRow').append('<div class="language_selection_placeholder"></div>')
+        })
+        
+    }
+    else
+    {
+        //hide the navigation by default
+        $('head').append('<style>li.navListLi{display:none;}</style>');
+        //add the language interface on page load
+        cookieHandler.pageLoad();
+        $(function() {
+            //add the wrapper to the row
+            $('.multiLanguageRow').append('<div class="language_selection_wrapper flex_align_right">' + cookieHandler.generateLanguageFlagsHTML() + '</div>');
+            $('.language_selection_wrapper').find('.language_selection_anchor').eq(parseInt(cookieHandler.getCookie())).addClass('active').attr('title', '');
+            console.log("Current Language : " + parseInt(cookieHandler.getCookie()));
+             $('body').on('click', '.language_selection_anchor', function() {
+                changeLanguage($(this));
+            }); 
         });
-    });
-    //add the language interface on window load
-    $(window).load(function() {
-        $('.dmMobileBody #site_content').prepend('<div class="language_selection_wrapper flex_align_right language_selection_wrapper_mobile">' + cookieHandler.generateLanguageFlagsHTML() + '</div>');
-        $('.language_selection_wrapper').find('.language_selection_anchor').eq(parseInt(cookieHandler.getCookie())).addClass('active').attr('title', '');
-    });
+    }
+    
+ 
   </script>
 
   <style>  
+
+    .multiLanguageRow
+    {
+        text-align: right;
+    }
+    .language_selection_placeholder:after
+    {
+        font-family: arial;
+        content: "Multi Language Element Will Appear Here";
+        font-size: 16px;
+        font-color: black;
+        font-weight: bold;
+        background-color: #BBBBBB;
+        padding: 3px;
+    }
+
     .flex_align_left {
         text-align: left;
     }
@@ -205,7 +270,7 @@
         text-align: right;
     }
     
-    .language_selection_wrapper {
+    .language_selection_wrapper, {
         padding-top: 8px;
         clear: both;
     }
@@ -305,7 +370,7 @@
         -webkit-transform: scale(1);
     }
     
-    .language_selection_wrapper_mobile {
+    .language_selection_wrapper_mobile, {
         margin-top: 0;
         padding-right: 20px;
         padding: 12px 15px 12px 15px;
