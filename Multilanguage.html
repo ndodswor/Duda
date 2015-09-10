@@ -102,7 +102,7 @@
         },
         //FUNCTION: changes page based on language selection if necessary
         selectLang: function(lang) {
-            console.log('Setting language to ' + MLV.languages[lang]);
+            console.log('Setting language to ' + lang);
             if (MLV.cookieHandler.getCookie() === lang.toString()) {
                 console.log("same lang, no page change needed");
             } else if (MLV.cookieHandler.getCookie() != lang) {
@@ -111,7 +111,7 @@
                 if (basePage === '/home') {
                     basePage = '/';
                 }
-                var basePagePath = basePage + MLV.cookieHandler.getPageSuffix(parseInt(lang)) + 
+                var basePagePath = basePage + MLV.cookieHandler.getPageSuffix(lang) + 
                 window.location.search;
                 window.location.replace(basePagePath);
             }
@@ -119,36 +119,31 @@
 
         /*FUNCTION: return whether or not the string ends with the suffix. If there's no 
         suffix, return true only if the default language is enabled. */
-        pageEndsWith: function(str, suffix) {
+        doesPageEndWith: function(str, suffix) {
             //if there is no explicit suffix and the default language is enabled
             if(str.indexOf("_") === -1 && ( suffix === MLV.defaultLanguage || suffix === ""))
-            {
+            { 
                 return true;
             }
-            //otherwise, if the suffix matches (and default language is not enabled), 
-            //show the page
+            //otherwise, if default language is not enabled), 
             else if(str.indexOf("_") !== -1 && suffix !== MLV.defaultLanguage
                 && suffix !== "") 
-            {
+            {   //and the suffix matches the current language, return true
                 return str.indexOf(suffix, str.length - suffix.length) !== -1;
             }
-            //if neither, don't show the page.
+            //if neither, return false
             else
             {
                 return false;
             }
         },
-        //FUNCTION: given the language array index, return the appropriate page suffix
+        //FUNCTION: given the language suffix, return the appropriate page suffix
         getPageSuffix: function(lang) {
-            if(MLV.languages[lang] === MLV.defaultLanguage || typeof lang === undefined)
+            if(lang === MLV.defaultLanguage || typeof lang === undefined)
             {
                 return "";
             }
-            return "_" + MLV.languages[lang];
-        },
-        //FUNCTION: get the parameters from the URL
-        getURLParameters: function(pagePath1) {
-            return pagePath1.split("?")[1];
+            return "_" + lang;
         },
         //FUNCTION: strip the _ from the suffix
         stripPageSuffix: function(pagePath1) {
@@ -161,8 +156,8 @@
                 $('.dmNavWrapper li a').each(function() {
                     if ($(this).attr('href') !== undefined) {
                         //and if it has a href, check if it matches the current language
-                        if (MLV.cookieHandler.pageEndsWith($(this).attr('href'), 
-                            MLV.cookieHandler.getPageSuffix(parseInt(MLV.cookieHandler.getCookie())))) {
+                        if (MLV.cookieHandler.doesPageEndWith($(this).attr('href'), 
+                            MLV.cookieHandler.getPageSuffix(MLV.cookieHandler.getCookie()))) {
                             $(this).parents("li").css("display", "inline-block");
                         }
                         else
@@ -176,19 +171,20 @@
         },
         //load the appropriate home page and language
         pageLoad: function() {
-            //If there isn't yet a cookie, set one 
-            var cookieLang = parseInt(MLV.cookieHandler.getCookie());
-            if (cookieLang === 'undefined' || cookieLang < 0 || 
-                cookieLang > (MLV.languages.length - 1) || isNaN(cookieLang)) {
-                MLV.cookieHandler.setCookie(0);
-                console.log('Lang was undefined. (' + cookieLang + ') Lang = 0');
-            } else if (!MLV.cookieHandler.pageEndsWith(window.location.pathname, 
+            //If there isn't yet a cookie, set one for the default language
+            var cookieLang = MLV.cookieHandler.getCookie();
+            if (cookieLang === 'undefined' || MLV.languages.indexOf(cookieLang) < 0) {
+                MLV.cookieHandler.setCookie(MLV.defaultLanguage);
+                console.log('Language did not match available languages. (' + cookieLang + 
+                    ') Setting Language to ' + MLV.defaultLanguage);
+            } else if (!MLV.cookieHandler.doesPageEndWith(window.location.pathname, 
                 MLV.cookieHandler.getPageSuffix(cookieLang)) && cookieLang != 0) {
-                //display the appropriately home page for the language used
+                //otherwise, display the appropriate home page for the language used
                 var basePage = MLV.cookieHandler.stripPageSuffix(window.location.pathname);
                 if (basePage === '/home') {
                     basePage = '/';
                 }
+                //construct the appropriate page URL and replace the current page with it
                 var basePagePath = basePage + MLV.cookieHandler.getPageSuffix(cookieLang) + 
                 window.location.search;
                 window.location.replace(basePagePath);
@@ -202,7 +198,7 @@
             var gix; //iterator
             for(gix = 0; gix < MLV.languages.length; gix+=1) {
                 languageFlagsHTML = languageFlagsHTML + "<span class=\"icon_flag icon_flag_" + MLV.languages[gix] +
-                                    " language_selection_anchor\" data-language=\"" + gix + "\" alt=\"Switch to " + 
+                                    " language_selection_anchor\" data-language=\"" + MLV.languages[gix] + "\" alt=\"Switch to " + 
                                     MLV.languageName[MLV.languages[gix]] + "\", title=\"Switch to " + 
                                     MLV.languageName[MLV.languages[gix]] + "\"></span>";
             }
@@ -225,8 +221,7 @@
     --------------------------------------------------------------------------------*/ 
    //don't load if inside the editor
     if(window.editorParent.$)
-    {
-           //show the placeholder
+    {   //show the placeholder
         $(function(){
             $('.multiLanguageRow').append('<div class="language_selection_placeholder"></div>')
         })
@@ -240,9 +235,11 @@
         MLV.cookieHandler.pageLoad();
         $(function() {
             //add the wrapper to the row
-            $('.multiLanguageRow').append('<div class="language_selection_wrapper flex_align_right">' + MLV.cookieHandler.generateLanguageFlagsHTML() + '</div>');
-            $('.language_selection_wrapper').find('.language_selection_anchor').eq(parseInt(MLV.cookieHandler.getCookie())).addClass('active').attr('title', '');
-            console.log("Current Language : " + MLV.languages[parseInt(MLV.cookieHandler.getCookie())]);
+            $('.multiLanguageRow').append('<div class="language_selection_wrapper flex_align_right">' + 
+                MLV.cookieHandler.generateLanguageFlagsHTML() + '</div>');
+            var temp = $('.language_selection_wrapper').find('.language_selection_anchor')
+            temp.eq(MLV.languages.indexOf(MLV.cookieHandler.getCookie())).addClass('active').attr('title', '');
+            console.log("Current Language : " + MLV.cookieHandler.getCookie());
              $('body').on('click', '.language_selection_anchor', function() {
                 MLV.functions.changeLanguage($(this));
             }); 
@@ -251,7 +248,7 @@
     
  
   </script>
-
+  <!-- Styles for MultiLanguage Interface -->
   <style>  
 
     .multiLanguageRow
