@@ -1,10 +1,7 @@
-<!--THE CONTENT OF THIS FILE WILL BE APPENDED TO EVERY PAGE INSIDE THE </HEAD> ELEMENT-->
 <script>
      /*----------MULTILANGUAGE script for DUDAONE [Raw Edition] README----------------
-    This script adds a set of language flags below any div to which the 
-    multiLanguageRow class is applied. In the editor, this will display as placeholder
-    text. These flags can be clicked to display and hide pages in the navigation based
-    on the page suffixes and the language associated with the selected flag.
+     This script allows site visitors to easily switch between displayed languages in 
+     a site using flag icons corresponding to the selected language's country.
 
     ----------------------------HOW TO USE THIS SCRIPT--------------------------------
     1. Create a DudaOne site with pages in the default language
@@ -20,8 +17,11 @@
     (so the home page for spanish would be _es, for french would be _fr, etc.)
     4. Paste this script into the site's header (go to menu, then site settings, then
     header HTML)
-    5. Add the placement div <div class='multiLanguageRow'> into an HTML element on the site
-    6. Set the navigation to display 'all items'; Go to design -> navigation -> customize (under desktop) -> settings and in the 'Number of visible desktop navigation items' dropdown, select 'all items'.
+    5. Add the placement div <div class='multiLanguageRow'> into an HTML element on 
+    the site
+    6. Set the navigation to display 'all items'; Go to design -> navigation -> 
+    customize (under desktop) -> settings and in the 'Number of visible desktop 
+    navigation items' dropdown, select 'all items'.
     
     ------------------------TROUBLESHOOTING / REQUIREMENTS----------------------------
     This script should be added to the header HTML of the site.
@@ -43,10 +43,10 @@
     visible navigation items' is necessary to have pages display properly.
 
     -------------------------------Customization-------------------------------------
-    Add any MLV.languages you want in the 'languages' array (by suffix). They will appear
-    on the site in the order they appear in this array. The default language will be
-    the language that first loads for new visitors and the language assumed for pages
-    without a language ID suffix.
+    Add any MLV.languages you want in the 'languages' array (by suffix). They will 
+    appear on the site in the order they appear in this array. The default language 
+    will be the language that first loads for new visitors and the language assumed 
+    for pages without a language ID suffix.
     
     if you wish to add additional languages, it is necessary to modify the flag 
     datagram in the CSS styles at the end of this script, as well as modify the styles
@@ -54,13 +54,13 @@
 
     --------------------------------END OF README------------------------------------*/
 
-    /*-------------------------------GLOBAL Variables----------------------------------
+    /*-------------------------------MLV Namespace-------------------------------------
     Values used to store and set information. These are wrapped into MLV (short for 
     'Multi Language Variables') to conserve global namespace.
     ---------------------------------------------------------------------------------*/ 
     var MLV = {}; // multi-language variable namespace
     MLV.defaultLanguage = "en"; //this language will be assumed to have no suffix
-    MLV.languages = ["en", "es", "iw", "ca", "fr"];  //full list of languages
+    MLV.languages = ["en", "kr", "cn"];  //full list of languages
     MLV.languageName = {"us":"American English",
                         "en":"English",
                         "es":"Spanish",
@@ -79,11 +79,11 @@
                         "nl":"Dutch"
     }; // add more language definitions here
    
-    /*------------------------cookieHandler NAMESPACE---------------------------------
+    /*------------------------cookieHandler class====---------------------------------
     set of functions to set/read cookies to store the active language across sessions
     put in this namespace to prevent potential function/variable collision.
     --------------------------------------------------------------------------------*/       
-    var cookieHandler = { //function namespace
+    MLV.cookieHandler = { //class declaration
            
         //FUNCTION: gets the cookie data from the browser
         getCookie: function() {
@@ -103,21 +103,22 @@
         //FUNCTION: changes page based on language selection if necessary
         selectLang: function(lang) {
             console.log('Setting language to ' + MLV.languages[lang]);
-            if (cookieHandler.getCookie() === lang.toString()) {
+            if (MLV.cookieHandler.getCookie() === lang.toString()) {
                 console.log("same lang, no page change needed");
-            } else if (cookieHandler.getCookie() != lang) {
-                cookieHandler.setCookie(lang);
-                var basePage = cookieHandler.stripPageSuffix(window.location.pathname);
+            } else if (MLV.cookieHandler.getCookie() != lang) {
+                MLV.cookieHandler.setCookie(lang);
+                var basePage = MLV.cookieHandler.stripPageSuffix(window.location.pathname);
                 if (basePage === '/home') {
                     basePage = '/';
                 }
-                var basePagePath = basePage + cookieHandler.getPageSuffix(parseInt(lang)) + 
+                var basePagePath = basePage + MLV.cookieHandler.getPageSuffix(parseInt(lang)) + 
                 window.location.search;
                 window.location.replace(basePagePath);
             }
         },
 
-        /*FUNCTION: return whether or not the string ends with the suffix. If there's no suffix, return true only if the default language is enabled. */
+        /*FUNCTION: return whether or not the string ends with the suffix. If there's no 
+        suffix, return true only if the default language is enabled. */
         pageEndsWith: function(str, suffix) {
             //if there is no explicit suffix and the default language is enabled
             if(str.indexOf("_") === -1 && ( suffix === MLV.defaultLanguage || suffix === ""))
@@ -160,7 +161,8 @@
                 $('.dmNavWrapper li a').each(function() {
                     if ($(this).attr('href') !== undefined) {
                         //and if it has a href, check if it matches the current language
-                        if (cookieHandler.pageEndsWith($(this).attr('href'), cookieHandler.getPageSuffix(parseInt(cookieHandler.getCookie())))) {
+                        if (MLV.cookieHandler.pageEndsWith($(this).attr('href'), 
+                            MLV.cookieHandler.getPageSuffix(parseInt(MLV.cookieHandler.getCookie())))) {
                             $(this).parents("li").css("display", "inline-block");
                         }
                         else
@@ -175,21 +177,23 @@
         //load the appropriate home page and language
         pageLoad: function() {
             //If there isn't yet a cookie, set one 
-            var cookieLang = parseInt(cookieHandler.getCookie());
-            if (cookieLang === 'undefined' || cookieLang < 0 || cookieLang > (MLV.languages.length - 1) || isNaN(cookieLang)) {
-                cookieHandler.setCookie(0);
+            var cookieLang = parseInt(MLV.cookieHandler.getCookie());
+            if (cookieLang === 'undefined' || cookieLang < 0 || 
+                cookieLang > (MLV.languages.length - 1) || isNaN(cookieLang)) {
+                MLV.cookieHandler.setCookie(0);
                 console.log('Lang was undefined. (' + cookieLang + ') Lang = 0');
-            } else if (!cookieHandler.pageEndsWith(window.location.pathname, cookieHandler.getPageSuffix(cookieLang)) && cookieLang != 0) {
+            } else if (!MLV.cookieHandler.pageEndsWith(window.location.pathname, 
+                MLV.cookieHandler.getPageSuffix(cookieLang)) && cookieLang != 0) {
                 //display the appropriately home page for the language used
-                var basePage = cookieHandler.stripPageSuffix(window.location.pathname);
+                var basePage = MLV.cookieHandler.stripPageSuffix(window.location.pathname);
                 if (basePage === '/home') {
                     basePage = '/';
                 }
-                var basePagePath = basePage + cookieHandler.getPageSuffix(cookieLang) + 
+                var basePagePath = basePage + MLV.cookieHandler.getPageSuffix(cookieLang) + 
                 window.location.search;
                 window.location.replace(basePagePath);
             }
-            cookieHandler.showMatchingLanguageNavElements();
+            MLV.cookieHandler.showMatchingLanguageNavElements();
         },
         //generates the HTML structure for the clickable flags
         generateLanguageFlagsHTML: function() {
@@ -206,13 +210,15 @@
         }
     }
 
-     /*------------------------Generic Functions--------------------------------------
-    Functions which do not fit into the cookiehandler namespace
+     /*------------------------Functions class==--------------------------------------
+    Functions which do not fit into the cookieHandler namespace
     --------------------------------------------------------------------------------*/   
     
-    //logs which language should be selected then call cookiehandler's selectlanguage function
-    function changeLanguage(sel) {
-        cookieHandler.selectLang(sel.data('language').toString());
+    //logs which language should be selected then call MLV.cookieHandler's selectlanguage function
+    MLV.functions = { //class declaration
+         changeLanguage: function(sel) {
+            MLV.cookieHandler.selectLang(sel.data('language').toString());
+        }
     }
     /*------------------------Main Function-------------------------------------------
     Sets all of the above functions into motion so they do something on the page.
@@ -231,14 +237,14 @@
         //hide the navigation by default
         $('head').append('<style>li.navListLi{display:none;}</style>');
         //add the language interface on page load
-        cookieHandler.pageLoad();
+        MLV.cookieHandler.pageLoad();
         $(function() {
             //add the wrapper to the row
-            $('.multiLanguageRow').append('<div class="language_selection_wrapper flex_align_right">' + cookieHandler.generateLanguageFlagsHTML() + '</div>');
-            $('.language_selection_wrapper').find('.language_selection_anchor').eq(parseInt(cookieHandler.getCookie())).addClass('active').attr('title', '');
-            console.log("Current Language : " + MLV.languages[parseInt(cookieHandler.getCookie())]);
+            $('.multiLanguageRow').append('<div class="language_selection_wrapper flex_align_right">' + MLV.cookieHandler.generateLanguageFlagsHTML() + '</div>');
+            $('.language_selection_wrapper').find('.language_selection_anchor').eq(parseInt(MLV.cookieHandler.getCookie())).addClass('active').attr('title', '');
+            console.log("Current Language : " + MLV.languages[parseInt(MLV.cookieHandler.getCookie())]);
              $('body').on('click', '.language_selection_anchor', function() {
-                changeLanguage($(this));
+                MLV.functions.changeLanguage($(this));
             }); 
         });
     }
