@@ -135,8 +135,8 @@
                 cookieHandler.setCookie(0);
             } else if (!cookieHandler.pageEndsWith(window.location.pathname, cookieHandler.getPageSuffix(cookieLang)) && cookieLang != 0) {
                 var basePage = cookieHandler.stripPageSuffix(window.location.pathname);
-                if (basePage === '/') {
-                    basePage = '/home';
+                if (basePage === '/home') {
+                    basePage = '/';
                 }
                 window.location = basePage + cookieHandler.getPageSuffix(cookieLang);
             }
