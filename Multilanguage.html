@@ -8,7 +8,8 @@
 
     /*-------------------------------MLV Namespace-------------------------------------
     Values used to store and set information. These are wrapped into MLV (short for 
-    'Multi Language Variables') to conserve global namespace.
+    'Multi Language Variables') to conserve global namespace. All functions and
+    variables used by this script are limited to this namespace.
     ---------------------------------------------------------------------------------*/ 
     var MLV = {}; // multi-language variable namespace
     MLV.defaultLanguage = "en"; //this language will be assumed to have no suffix
@@ -36,7 +37,7 @@
     put in this namespace to prevent potential function/variable collision.
     --------------------------------------------------------------------------------*/       
     MLV.cookieHandler = { //class declaration
-           
+
         //FUNCTION: gets the cookie data from the browser
         getCookie: function() {
             var langCookie = document.cookie.replace(/(?:(?:^|.*;\s*)CurrLanguage\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -158,7 +159,7 @@
         }
     }
 
-     /*------------------------Functions class==--------------------------------------
+    /*------------------------Functions class==---------------------------------------
     Functions which do not fit into the cookieHandler namespace
     --------------------------------------------------------------------------------*/   
     
@@ -177,7 +178,6 @@
         $(function(){
             $('.multiLanguageRow').append('<div class="language_selection_placeholder"></div>')
         })
-        
     }
     else
     {
@@ -197,8 +197,6 @@
             }); 
         });
     }
-    
- 
   </script>
   <!-- Styles for MultiLanguage Interface -->
   <style>  
