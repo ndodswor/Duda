@@ -1,3 +1,4 @@
+<!--THE CONTENT OF THIS FILE WILL BE APPENDED TO EVERY PAGE INSIDE THE </HEAD> ELEMENT-->
 <script>
      /*----------MULTILANGUAGE script for DUDAONE [Raw Edition] README----------------
     This script adds a set of language flags below any div to which the 
@@ -7,11 +8,16 @@
 
     ----------------------------HOW TO USE THIS SCRIPT--------------------------------
     1. Create a DudaOne site with pages in the default language
-    2. Copy each of the languages from the default language (and change their content)
+    2. Duplicate each of the pages once for each language you wish to add. You should
+    end up with, for example, three 'home' pages if you want your site to have three
+    languages. The page names can be whatever you wish (Incio, for example, would be
+    a good name for the home page in spanish)
     3. Re-name the page URLs for these pages (in manage pages, click the gear icon to
     the right of each page, then go to SEO & Settings and scroll down to 'page URL') 
     to match their parent page's URL, but followed by an underscore and then the
-    language extension. For example: home becomes home_en, about becomes about_en, etc
+    language extension. For example: about becomes about_en, gallery becomes 
+    gallery_en, et cetera. For the home pages, the page URL should just be the suffix
+    (so the home page for spanish would be _es, for french would be _fr, etc.)
     4. Paste this script into the site's header (go to menu, then site settings, then
     header HTML)
     5. Add the placement div <div class='multiLanguageRow'> into an HTML element on the site
@@ -96,7 +102,7 @@
         },
         //FUNCTION: changes page based on language selection if necessary
         selectLang: function(lang) {
-            console.log('Lang = ' + lang);
+            console.log('Setting language to ' + MLV.languages[lang]);
             if (cookieHandler.getCookie() === lang.toString()) {
                 console.log("same lang, no page change needed");
             } else if (cookieHandler.getCookie() != lang) {
@@ -170,9 +176,9 @@
         pageLoad: function() {
             //If there isn't yet a cookie, set one 
             var cookieLang = parseInt(cookieHandler.getCookie());
-            if (cookieLang === 'undefined') {
+            if (cookieLang === 'undefined' || cookieLang < 0 || cookieLang > (MLV.languages.length - 1) || isNaN(cookieLang)) {
                 cookieHandler.setCookie(0);
-                console.log('Lang was undefined. Lang = 0');
+                console.log('Lang was undefined. (' + cookieLang + ') Lang = 0');
             } else if (!cookieHandler.pageEndsWith(window.location.pathname, cookieHandler.getPageSuffix(cookieLang)) && cookieLang != 0) {
                 //display the appropriately home page for the language used
                 var basePage = cookieHandler.stripPageSuffix(window.location.pathname);
@@ -206,7 +212,6 @@
     
     //logs which language should be selected then call cookiehandler's selectlanguage function
     function changeLanguage(sel) {
-        console.log("Option Value: " + sel.data('language').toString());
         cookieHandler.selectLang(sel.data('language').toString());
     }
     /*------------------------Main Function-------------------------------------------
@@ -231,7 +236,7 @@
             //add the wrapper to the row
             $('.multiLanguageRow').append('<div class="language_selection_wrapper flex_align_right">' + cookieHandler.generateLanguageFlagsHTML() + '</div>');
             $('.language_selection_wrapper').find('.language_selection_anchor').eq(parseInt(cookieHandler.getCookie())).addClass('active').attr('title', '');
-            console.log("Current Language : " + parseInt(cookieHandler.getCookie()));
+            console.log("Current Language : " + MLV.languages[parseInt(cookieHandler.getCookie())]);
              $('body').on('click', '.language_selection_anchor', function() {
                 changeLanguage($(this));
             }); 
