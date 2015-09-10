@@ -119,26 +119,25 @@
 
         /*FUNCTION: return whether or not the string ends with the suffix. If there's no 
         suffix, return true only if the default language is enabled. */
-        pageEndsWith: function(str, suffix) {
+        doesPageEndWith: function(str, suffix) {
             //if there is no explicit suffix and the default language is enabled
             if(str.indexOf("_") === -1 && ( suffix === MLV.defaultLanguage || suffix === ""))
-            {
+            { 
                 return true;
             }
-            //otherwise, if the suffix matches (and default language is not enabled), 
-            //show the page
+            //otherwise, if default language is not enabled), 
             else if(str.indexOf("_") !== -1 && suffix !== MLV.defaultLanguage
                 && suffix !== "") 
-            {
+            {   //and the suffix matches the current language, return true
                 return str.indexOf(suffix, str.length - suffix.length) !== -1;
             }
-            //if neither, don't show the page.
+            //if neither, return false
             else
             {
                 return false;
             }
         },
-        //FUNCTION: given the language array index, return the appropriate page suffix
+        //FUNCTION: given the language suffix, return the appropriate page suffix
         getPageSuffix: function(lang) {
             if(lang === MLV.defaultLanguage || typeof lang === undefined)
             {
@@ -157,7 +156,7 @@
                 $('.dmNavWrapper li a').each(function() {
                     if ($(this).attr('href') !== undefined) {
                         //and if it has a href, check if it matches the current language
-                        if (MLV.cookieHandler.pageEndsWith($(this).attr('href'), 
+                        if (MLV.cookieHandler.doesPageEndWith($(this).attr('href'), 
                             MLV.cookieHandler.getPageSuffix(MLV.cookieHandler.getCookie()))) {
                             $(this).parents("li").css("display", "inline-block");
                         }
@@ -172,19 +171,20 @@
         },
         //load the appropriate home page and language
         pageLoad: function() {
-            //If there isn't yet a cookie, set one 
+            //If there isn't yet a cookie, set one for the default language
             var cookieLang = MLV.cookieHandler.getCookie();
             if (cookieLang === 'undefined' || MLV.languages.indexOf(cookieLang) < 0) {
                 MLV.cookieHandler.setCookie(MLV.defaultLanguage);
                 console.log('Language did not match available languages. (' + cookieLang + 
                     ') Setting Language to ' + MLV.defaultLanguage);
-            } else if (!MLV.cookieHandler.pageEndsWith(window.location.pathname, 
+            } else if (!MLV.cookieHandler.doesPageEndWith(window.location.pathname, 
                 MLV.cookieHandler.getPageSuffix(cookieLang)) && cookieLang != 0) {
-                //display the appropriately home page for the language used
+                //otherwise, display the appropriate home page for the language used
                 var basePage = MLV.cookieHandler.stripPageSuffix(window.location.pathname);
                 if (basePage === '/home') {
                     basePage = '/';
                 }
+                //construct the appropriate page URL and replace the current page with it
                 var basePagePath = basePage + MLV.cookieHandler.getPageSuffix(cookieLang) + 
                 window.location.search;
                 window.location.replace(basePagePath);
@@ -221,8 +221,7 @@
     --------------------------------------------------------------------------------*/ 
    //don't load if inside the editor
     if(window.editorParent.$)
-    {
-           //show the placeholder
+    {   //show the placeholder
         $(function(){
             $('.multiLanguageRow').append('<div class="language_selection_placeholder"></div>')
         })
@@ -249,7 +248,7 @@
     
  
   </script>
-
+  <!-- Styles for MultiLanguage Interface -->
   <style>  
 
     .multiLanguageRow
