@@ -32,7 +32,7 @@
                         "nl":"Dutch"
     }; // add more language definitions here
    
-    /*------------------------cookieHandler class====---------------------------------
+    /*------------------------cookieHandler class-------------------------------------
     set of functions to set/read cookies to store the active language across sessions
     put in this namespace to prevent potential function/variable collision.
     --------------------------------------------------------------------------------*/       
@@ -69,7 +69,6 @@
                 window.location.replace(basePagePath);
             }
         },
-
         /*FUNCTION: return whether or not the string ends with the suffix. If there's no 
         suffix, return true only if the default language is enabled. */
         doesPageEndWith: function(str, suffix) {
@@ -159,7 +158,7 @@
         }
     }
 
-    /*------------------------Functions class==---------------------------------------
+    /*------------------------Functions class-----------------------------------------
     Functions which do not fit into the cookieHandler namespace
     --------------------------------------------------------------------------------*/   
     
@@ -201,10 +200,6 @@
   <!-- Styles for MultiLanguage Interface -->
   <style>  
 
-    .multiLanguageRow
-    {
-        text-align: right;
-    }
     .language_selection_placeholder:after
     {
         font-family: arial;
@@ -224,7 +219,7 @@
         text-align: center;
     }
     
-    .flex_align_right {
+    .flex_align_right, .multiLanguageRow {
         text-align: right;
     }
     
