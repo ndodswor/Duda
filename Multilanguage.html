@@ -13,7 +13,7 @@
     ---------------------------------------------------------------------------------*/ 
     var MLV = {}; // multi-language variable namespace
     MLV.defaultLanguage = "en"; //this language will be assumed to have no suffix
-    MLV.languages = ["en", "kr", "cn"];  //full list of languages
+    MLV.languages = ["en", "iw", "es", "ca"];  //full list of languages
     MLV.languageName = {"us":"American English",
                         "en":"English",
                         "es":"Spanish",
@@ -72,8 +72,10 @@
         /*FUNCTION: return whether or not the string ends with the suffix. If there's no 
         suffix, return true only if the default language is enabled. */
         doesPageEndWith: function(str, suffix) {
+            console.log('str = ' + str + ' & suffix = ' + suffix);
             //if there is no explicit suffix and the default language is enabled
-            if(str.indexOf("_") === -1 && ( suffix === MLV.defaultLanguage || suffix === ""))
+            if(str.indexOf("_") === -1 && ( suffix === MLV.cookieHandler.getPageSuffix(MLV.defaultLanguage) || 
+                suffix === ""))
             { 
                 return true;
             }
@@ -89,9 +91,9 @@
         },
         //FUNCTION: given the language suffix, return the appropriate page suffix
         getPageSuffix: function(lang) {
-            if(lang === MLV.defaultLanguage || typeof lang === undefined)
+            if(typeof lang === undefined)
             {
-                return "";
+                return "_" + MLV.defaultLanguage;
             }
             return "_" + lang;
         },
