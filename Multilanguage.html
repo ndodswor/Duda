@@ -72,7 +72,6 @@
         /*FUNCTION: return whether or not the string ends with the suffix. If there's no 
         suffix, return true only if the default language is enabled. */
         doesPageEndWith: function(str, suffix) {
-            console.log('str = ' + str + ' & suffix = ' + suffix);
             //if there is no explicit suffix and the default language is enabled
             if(str.indexOf("_") === -1 && ( suffix === MLV.cookieHandler.getPageSuffix(MLV.defaultLanguage) || 
                 suffix === ""))
