@@ -77,10 +77,8 @@
             { 
                 return true;
             }
-            //otherwise, if default language is not enabled), 
-            else if(str.indexOf("_") !== -1 && suffix !== MLV.defaultLanguage
-                && suffix !== "") 
-            {   //and the suffix matches the current language, return true
+            else if(str.indexOf("_") !== -1 && suffix !== "") 
+            {   //Otherwise, if the suffix matches the current language, return true
                 return str.indexOf(suffix, str.length - suffix.length) !== -1;
             }
             //if neither, return false
