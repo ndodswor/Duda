@@ -5,7 +5,7 @@
     on the page suffixes and the language associated with the selected flag.
 
     ----------------------------HOW TO USE THIS SCRIPT--------------------------------
-    1. Create a DudaOne site with pages in the default language
+    1. Create a DudaOne site with pages in the default language without an extension
     2. Duplicate each of the pages once for each language you wish to add. You should
     end up with, for example, three 'home' pages if you want your site to have three
     languages. The page names can be whatever you wish (Incio, for example, would be
@@ -13,8 +13,8 @@
     3. Re-name the page URLs for these pages (in manage pages, click the gear icon to
     the right of each page, then go to SEO & Settings and scroll down to 'page URL') 
     to match their parent page's URL, but followed by an underscore and then the
-    language extension. For example: about becomes about_en, gallery becomes 
-    gallery_en, et cetera. For the home pages, the page URL should just be the suffix
+    language extension. For example: about becomes about_es, gallery becomes 
+    gallery_es, et cetera. For the home pages, the page URL should just be the suffix
     (so the home page for spanish would be _es, for french would be _fr, etc.)
     4. Paste this script into the site's header (go to menu, then site settings, then
     header HTML)
@@ -23,6 +23,9 @@
     6. Set the navigation to display 'all items'; Go to design -> navigation -> 
     customize (under desktop) -> settings and in the 'Number of visible desktop 
     navigation items' dropdown, select 'all items'.
+    7. Set the tablet navigation to 'side' (the icon with a darker half of the page)
+    and the mobile navigation to slide, list (the multiple boxes), or expanded 
+    (the single box at the top right).
     
     ------------------------TROUBLESHOOTING / REQUIREMENTS----------------------------
     This script should be added to the header HTML of the site.
@@ -42,6 +45,11 @@
 
     Setting the navigation of the site to have 'All Items' displayed in the 'Number of 
     visible navigation items' is necessary to have pages display properly.
+
+    Setting the tablet navigation to 'side' (the icon with a darker half of the page)
+    and the mobile navigation to slide, list (the multiple boxes), or expanded 
+    (the single box at the top right) is necessary for this to display correctly on
+    those devices.
 
     -------------------------------Customization-------------------------------------
     Add any MLV.languages you want in the 'languages' array (by suffix). They will 
