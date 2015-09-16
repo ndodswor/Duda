@@ -2,9 +2,10 @@
     This script allows site visitors to easily switch between displayed languages in 
     a site using flag icons corresponding to the selected language's country.
 
-    The currently supported languages are:
-    English, Spanish, Catalan, French, Czetch, Chinese, Korean, German, Finnish,
-    Swedish, Danish, Dutch, Japanese, and Hebrew. If you wish to add more languages
+    --------------------SUPPORTED LANGUAGES & THEIR SUFFIXES--------------------------
+    English (en), Spanish (es), Catalan (ca), Czetch (cz), Chinese (cn), Korean (kr)
+    German (de), Finnish (fi), French (fr) Swedish (se), Danish (dk), Dutch (no , nl), 
+    Japanese (jp), and Hebrew (iw). If you wish to add more languages
     please consult the 'Customization' section.
 
     -----------------------------HOW THIS SCRIPT WORKS--------------------------------
@@ -22,7 +23,7 @@
     of one day) will direct them to the appropriate language home page.
 
     ----------------------------HOW TO USE THIS SCRIPT--------------------------------
-    1. Create a DudaOne site with pages in the default language without an extension
+    1. Create a DudaOne site with pages in the default language (without a suffix)
     2. Duplicate each of the pages once for each language you wish to add. You should
     end up with, for example, three 'home' pages if you want your site to have three
     languages. The page names can be whatever you wish (Incio, for example, would be
@@ -32,11 +33,14 @@
     to match their parent page's URL, but followed by an underscore and then the
     language extension. For example: about becomes about_es, gallery becomes 
     gallery_es, et cetera. For the home pages, the page URL should just be the suffix
-    (so the home page for spanish would be _es, for french would be _fr, etc.)
+    (so the home page for spanish would be _es, for french would be _fr, etc.) You 
+    can find a list of supported languages and their extensions in the supported
+    languages section above.
     4. Paste this script into the site's header (go to menu, then site settings, then
     header HTML)
-    5. Add the placement div <div class='multiLanguageRow'> into an HTML element on 
-    the site
+    5. Add an HTML element in your site's header or footer and add the code:
+     <div class='multiLanguageRow'> 
+     to it. Where you place this code is where the multilanguage flags will show up.
     6. Set the navigation to display 'all items'; Go to design -> navigation -> 
     customize (under desktop) -> settings and in the 'Number of visible desktop 
     navigation items' dropdown, select 'all items'.
