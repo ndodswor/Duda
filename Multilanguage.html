@@ -55,17 +55,29 @@
         },
         //FUNCTION: changes page based on language selection if necessary
         selectLang: function(lang) {
+            var basePagePath = ""; 
+            console.log('lang = ' + lang + ' & defaultLanguage = ' + MLV.defaultLanguage);
             console.log('Setting language to ' + lang);
+            //if the suffix already matches the selected language, don't do anything
             if (MLV.cookieHandler.getCookie() === lang.toString()) {
                 console.log("same lang, no page change needed");
+            //otherwise, set the cookie and change the page appropriately
             } else if (MLV.cookieHandler.getCookie() != lang) {
                 MLV.cookieHandler.setCookie(lang);
                 var basePage = MLV.cookieHandler.stripPageSuffix(window.location.pathname);
-                if (basePage === '/home') {
-                    basePage = '/';
+                //if the base page is blank, send user to the home page
+                if(basePage === "/")
+                {
+                    basePage = "/home"
                 }
-                var basePagePath = basePage + MLV.cookieHandler.getPageSuffix(lang) + 
-                window.location.search;
+                //if the language isn't default or it's not the home page, add the suffix.
+                if(basePage !== "/home" || lang !== MLV.defaultLanguage)
+                {
+                    basePage = basePage + MLV.cookieHandler.getPageSuffix(lang);
+                }
+                //preserve any URL parameters
+                basePagePath = basePage + window.location.search;
+                //switch the page
                 window.location.replace(basePagePath);
             }
         },
@@ -120,7 +132,7 @@
                 });
             });
         },
-        //load the appropriate home page and language
+        //load the appropriate page and language
         pageLoad: function() {
             //If there isn't yet a cookie, set one for the default language
             var cookieLang = MLV.cookieHandler.getCookie();
@@ -130,10 +142,11 @@
                     ') Setting Language to ' + MLV.defaultLanguage);
             } else if (!MLV.cookieHandler.doesPageEndWith(window.location.pathname, 
                 MLV.cookieHandler.getPageSuffix(cookieLang)) && cookieLang != 0) {
-                //otherwise, display the appropriate home page for the language used
+                //otherwise, display the appropriate page for the language used
                 var basePage = MLV.cookieHandler.stripPageSuffix(window.location.pathname);
-                if (basePage === '/home') {
-                    basePage = '/';
+                //if it's the home page, add /home
+                if (basePage === '/') {
+                    basePage = '/home';
                 }
                 //construct the appropriate page URL and replace the current page with it
                 var basePagePath = basePage + MLV.cookieHandler.getPageSuffix(cookieLang) + 
