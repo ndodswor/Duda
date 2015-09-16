@@ -31,10 +31,10 @@
     3. Re-name the page URLs for these pages (in manage pages, click the gear icon to
     the right of each page, then go to SEO & Settings and scroll down to 'page URL') 
     to match their parent page's URL, but followed by an underscore and then the
-    language extension. For example: about becomes about_es, gallery becomes 
+    language suffix. For example: about becomes about_es, gallery becomes 
     gallery_es, et cetera. For the home pages, the page URL should just be the suffix
     (so the home page for spanish would be _es, for french would be _fr, etc.) You 
-    can find a list of supported languages and their extensions in the supported
+    can find a list of supported languages and their suffixes in the supported
     languages section above.
     4. Paste this script into the site's header (go to menu, then site settings, then
     header HTML)
