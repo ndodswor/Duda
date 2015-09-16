@@ -2,6 +2,11 @@
     This script allows site visitors to easily switch between displayed languages in 
     a site using flag icons corresponding to the selected language's country.
 
+    The currently supported languages are:
+    English, Spanish, Catalan, French, Czetch, Chinese, Korean, German, Finnish,
+    Swedish, Danish, Dutch, Japanese, and Hebrew. If you wish to add more languages
+    please consult the 'Customization' section.
+
     -----------------------------HOW THIS SCRIPT WORKS--------------------------------
     This script sends visitors to pages on the site with the same name and the 
     matching suffix (_en, _fr, etc) when the corresponding flag is clicked. If no 
