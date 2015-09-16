@@ -16,8 +16,8 @@
     These language flags will be displayed based on the suffix and order of 
     languages listed in the MLV.languages array.
 
-    The language set in MLV.defaultLanguage variable is assumed to be used for pages 
-    without a suffix.
+    The script assumes that any page without a suffix was written in the language 
+    set in the MLV.defaultLanguage variable.
 
     When a user visits the site again after leaving, a cookie (with default duration
     of one day) will direct them to the appropriate language home page.
@@ -47,6 +47,10 @@
     7. Set the tablet navigation to 'side' (the icon with a darker half of the page)
     and the mobile navigation to slide, list (the multiple boxes), or expanded 
     (the single box at the top right).
+    8. Change the MLV.languages array to contain the suffixes of languages of the 
+    pages you've added in the order you wish them to display
+    9. Change the MLV.defaultLanguage variable to the suffix of the default language
+    your site uses.
     
     ------------------------TROUBLESHOOTING / REQUIREMENTS----------------------------
     This script should be added to the header HTML of the site.
