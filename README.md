@@ -2,6 +2,20 @@
     This script allows site visitors to easily switch between displayed languages in 
     a site using flag icons corresponding to the selected language's country.
 
+    -----------------------------HOW THIS SCRIPT WORKS--------------------------------
+    This script sends visitors to pages on the site with the same name and the 
+    matching suffix (_en, _fr, etc) when the corresponding flag is clicked. If no 
+    page exists with this suffix, the visitor will reach a 404 page. 
+
+    These language flags will be displayed based on the suffix and order of 
+    languages listed in the MLV.languages array.
+
+    The language set in MLV.defaultLanguage variable is assumed to be used for pages 
+    without a suffix.
+
+    When a user visits the site again after leaving, a cookie (with default duration
+    of one day) will direct them to the appropriate language home page.
+
     ----------------------------HOW TO USE THIS SCRIPT--------------------------------
     1. Create a DudaOne site with pages in the default language without an extension
     2. Duplicate each of the pages once for each language you wish to add. You should
