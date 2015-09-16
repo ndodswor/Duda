@@ -1,9 +1,6 @@
     -------------MULTILANGUAGE script for DUDAONE [Raw Edition] README----------------
     This script allows site visitors to easily switch between displayed languages in 
     a site using flag icons corresponding to the selected language's country.
-    
-    Please read the README file to learn more about using, modifying, and
-    troubleshooting this script.
 
     ----------------------------HOW TO USE THIS SCRIPT--------------------------------
     1. Create a DudaOne site with pages in the default language without an extension
