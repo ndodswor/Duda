@@ -1,8 +1,9 @@
     -------------MULTILANGUAGE script for DUDAONE [Raw Edition] README----------------
-    This script adds a set of language flags below any div to which the 
-    multiLanguageRow class is applied. In the editor, this will display as placeholder
-    text. These flags can be clicked to display and hide pages in the navigation based
-    on the page suffixes and the language associated with the selected flag.
+    This script allows site visitors to easily switch between displayed languages in 
+    a site using flag icons corresponding to the selected language's country.
+    
+    Please read the README file to learn more about using, modifying, and
+    troubleshooting this script.
 
     ----------------------------HOW TO USE THIS SCRIPT--------------------------------
     1. Create a DudaOne site with pages in the default language without an extension
