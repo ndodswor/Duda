@@ -189,11 +189,11 @@
         $(function(){
             $('.multiLanguageRow').append('<div class="language_selection_placeholder"></div>')
         })
+        //hide the navigation by default
+        $('head').append('<style>li.navListLi{display:inline-block !important;}</style>');
     }
     else
     {
-        //hide the navigation by default
-        $('head').append('<style>li.navListLi{display:none;}</style>');
         //add the language interface on page load
         MLV.cookieHandler.pageLoad();
         $(function() {
@@ -212,8 +212,7 @@
   <!-- Styles for MultiLanguage Interface -->
   <style>  
 
-    .language_selection_placeholder:after
-    {
+    .language_selection_placeholder:after {
         font-family: arial;
         content: "Multi Language Element Will Appear Here";
         font-size: 16px;
@@ -221,6 +220,10 @@
         font-weight: bold;
         background-color: #BBBBBB;
         padding: 3px;
+    }
+
+    li.navListLi {
+        display:none;
     }
 
     .flex_align_left {
@@ -235,7 +238,7 @@
         text-align: right;
     }
     
-    .language_selection_wrapper, {
+    .language_selection_wrapper {
         padding-top: 8px;
         clear: both;
     }
