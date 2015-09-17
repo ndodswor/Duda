@@ -84,10 +84,10 @@
     and set animated navigation to off.
 
     -------------------------------Customization-------------------------------------
-    Add any MLV.languages you want in the 'languages' array (by suffix). They will 
+    Add any languages you want in the 'MLV.languages' array (by suffix). They will 
     appear on the site in the order they appear in this array. The default language 
     will be the language that first loads for new visitors and the language assumed 
-    for pages without a language ID suffix.
+    for the home page.
     
     if you wish to add additional languages, it is necessary to modify the flag 
     datagram in the CSS styles at the end of this script, as well as modify the styles
