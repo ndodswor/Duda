@@ -154,18 +154,21 @@
             }
             MLV.cookieHandler.showMatchingLanguageNavElements();
         },
-        //generates the HTML structure for the clickable flags
-        generateLanguageFlagsHTML: function() {
-            var languageFlagsHTML = "";
-            //for each active language, generate a div
+        //generates the HTML structure for the dropdown
+        generateLanguageListHTML: function() {
+            var languageListHTML = "";
+            //for each active language, generate an option. Mark the currently selected language.
             var gix; //iterator
             for(gix = 0; gix < MLV.languages.length; gix+=1) {
-                languageFlagsHTML = languageFlagsHTML + "<span class=\"icon_flag icon_flag_" + MLV.languages[gix] +
-                                    " language_selection_anchor\" data-language=\"" + MLV.languages[gix] + "\" alt=\"Switch to " + 
-                                    MLV.languageName[MLV.languages[gix]] + "\", title=\"Switch to " + 
-                                    MLV.languageName[MLV.languages[gix]] + "\"></span>";
+                languageListHTML = languageListHTML + 
+                "<option class=\"language_selection_anchor " + "\" value=\"" + MLV.languages[gix] + 
+                //if the language is currently selected, label it 'selected'.
+                "\"" + MLV.functions.isSelected(gix) + 
+                //print the name of the language for the viewer.
+                ">" + MLV.languageName[MLV.languages[gix]] + 
+                "</option>";
             }
-            return languageFlagsHTML;
+            return languageListHTML;
         }
     }
 
@@ -173,10 +176,16 @@
     Functions which do not fit into the cookieHandler namespace
     --------------------------------------------------------------------------------*/   
     
-    //logs which language should be selected then call MLV.cookieHandler's selectlanguage function
+   
     MLV.functions = { //class declaration
-         changeLanguage: function(sel) {
-            MLV.cookieHandler.selectLang(sel.data('language').toString());
+         //logs which language should be selected then call MLV.cookieHandler's selectlanguage function
+        changeLanguage: function(sel) {
+            console.log("changeLanguage called with value " + sel);
+            MLV.cookieHandler.selectLang(sel);
+        },
+        //returns selected if the index of the language in question is the default language
+        isSelected: function(index) {
+            return (MLV.languages[index] === MLV.cookieHandler.getCookie()) ? "selected" : "";
         }
     }
     /*------------------------Main Function-------------------------------------------
@@ -198,7 +207,9 @@
         $(function() {
             //add the wrapper to the row
             $('.multiLanguageRow').append('<div class="language_selection_wrapper flex_align_right">' + 
-                MLV.cookieHandler.generateLanguageFlagsHTML() + '</div>');
+                '<select class="language_selection_dropdown" onchange="MLV.functions.changeLanguage(this.value)">' + 
+                MLV.cookieHandler.generateLanguageListHTML() + 
+                '</select></div>');
             var temp = $('.language_selection_wrapper').find('.language_selection_anchor')
             temp.eq(MLV.languages.indexOf(MLV.cookieHandler.getCookie())).addClass('active').attr('title', '');
             console.log("Current Language : " + MLV.cookieHandler.getCookie());
