@@ -56,7 +56,6 @@
         //FUNCTION: changes page based on language selection if necessary
         selectLang: function(lang) {
             var basePagePath = ""; 
-            console.log('lang = ' + lang + ' & defaultLanguage = ' + MLV.defaultLanguage);
             console.log('Setting language to ' + lang);
             //if the suffix already matches the selected language, don't do anything
             if (MLV.cookieHandler.getCookie() === lang.toString()) {
