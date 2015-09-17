@@ -87,7 +87,7 @@
 
     It is possible to put the multiLanguageRow class in a div in the main body of the
     site, but due to the way animated navigation works in Duda, this may cause the 
-    flags not to load, so I recommend turning it off. To turn off animated 
+    dropdown not to load, so I recommend turning it off. To turn off animated 
     navigation, go to design -> navigation -> customize (under desktop) -> settings 
     and set animated navigation to off.
 
@@ -100,7 +100,7 @@
     if you wish to add additional languages, just add the language to the 
     MLV.languageName associative array using the language suffix as a key; please 
     refer to the existing languages in the array for examples. You can find a list of
-    official ISO extensions and language names on Wikipedia here:
+    official ISO suffixes and language names on Wikipedia here:
 
     https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 
