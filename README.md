@@ -25,30 +25,30 @@
     ----------------------------HOW TO USE THIS SCRIPT--------------------------------
     1. Create a DudaOne site with pages in the default language (without a suffix)
     2. Duplicate each of the pages once for each language you wish to add. You should
-    end up with, for example, three 'home' pages if you want your site to have three
-    languages. The page names can be whatever you wish (Incio, for example, would be
-    a good name for the home page in spanish)
+        end up with, for example, three 'home' pages if you want your site to have 
+        three languages. The page names can be whatever you wish (Incio, for example, 
+        would be a good name for the home page in spanish)
     3. Re-name the page URLs for these pages (in manage pages, click the gear icon to
-    the right of each page, then go to SEO & Settings and scroll down to 'page URL') 
-    to match their parent page's URL, but followed by an underscore and then the
-    language suffix. For example: home becomes home_es, gallery becomes 
-    gallery_es, et cetera.) You can find a list of supported languages and their 
-    suffixes in the supported languages section above.
+        the right of each page, then go to SEO & Settings and scroll down to 'page 
+        URL') to match their parent page's URL, but followed by an underscore and then
+        the language suffix. For example: home becomes home_es, gallery becomes 
+        gallery_es, et cetera.) You can find a list of supported languages and their 
+        suffixes in the supported languages section above.
     4. Paste this script into the site's header (go to menu, then site settings, then
-    header HTML)
+        header HTML)
     5. Add an HTML element in your site's header or footer and add the code:
-     <div class='multiLanguageRow'> 
-     to it. Where you place this code is where the multilanguage flags will show up.
+        <div class='multiLanguageRow'> 
+        to it. Where you place this code is where the multilanguage flags will show.
     6. Set the navigation to display 'all items'; Go to design -> navigation -> 
-    customize (under desktop) -> settings and in the 'Number of visible desktop 
-    navigation items' dropdown, select 'all items'.
+        customize (under desktop) -> settings and in the 'Number of visible desktop 
+        navigation items' dropdown, select 'all items'.
     7. Set the tablet navigation to 'side' (the icon with a darker half of the page)
-    and the mobile navigation to slide, list (the multiple boxes), or expanded 
-    (the single box at the top right).
-    8. Change the MLV.languages array to contain the suffixes of languages of the 
-    pages you've added in the order you wish them to display
-    9. Change the MLV.defaultLanguage variable to the suffix of the default language
-    your site uses.
+        and the mobile navigation to slide, list (the multiple boxes), or expanded 
+        (the single box at the top right).
+    9. Change the MLV.languages array to contain the suffixes of languages of the 
+        pages you've added in the order you wish them to display
+    10. Change the MLV.defaultLanguage variable to the suffix of the default language
+        your site uses.
     
     ------------------------TROUBLESHOOTING / REQUIREMENTS----------------------------
     This script should be added to the header HTML of the site.
@@ -73,6 +73,15 @@
     and the mobile navigation to slide, list (the multiple boxes), or expanded 
     (the single box at the top right) is necessary for this to display correctly on
     those devices.
+
+    This script may not work with some Duda templates; if this is the case, set the
+    header to 'display as row' by going to design -> header -> display as row.
+
+    It is possible to put the multiLanguageRow class in a div in the main body of the
+    site, but due to the way animated navigation works in Duda, this may cause the 
+    flags not to load, so I recommend turning it off. To turn off animated 
+    navigation, go to design -> navigation -> customize (under desktop) -> settings 
+    and set animated navigation to off.
 
     -------------------------------Customization-------------------------------------
     Add any MLV.languages you want in the 'languages' array (by suffix). They will 
