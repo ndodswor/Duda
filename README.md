@@ -1,6 +1,7 @@
     -------------MULTILANGUAGE script for DUDAONE [Raw Edition] README----------------
     This script allows site visitors to easily switch between displayed languages in 
-    a site using flag icons corresponding to the selected language's country.
+    a site using flag icons representing countries commonly associated with that
+    language. Page content and its translations must be created by the user.
 
     --------------------SUPPORTED LANGUAGES & THEIR SUFFIXES--------------------------
     English (en), Spanish (es), Catalan (ca), Czetch (cz), Chinese (cn), Korean (kr)
@@ -23,21 +24,22 @@
     of one day) will direct them to the appropriate language home page.
 
     ----------------------------HOW TO USE THIS SCRIPT--------------------------------
-    1. Create a DudaOne site with pages in the default language (without a suffix)
+    1. Create a DudaOne site with pages in the default language
     2. Duplicate each of the pages once for each language you wish to add. You should
         end up with, for example, three 'home' pages if you want your site to have 
         three languages. The page names can be whatever you wish (Incio, for example, 
         would be a good name for the home page in spanish)
-    3. Re-name the page URLs for these pages (in manage pages, click the gear icon to
-        the right of each page, then go to SEO & Settings and scroll down to 'page 
-        URL') to match their parent page's URL, but followed by an underscore and then
-        the language suffix. For example: home becomes home_es, gallery becomes 
-        gallery_es, et cetera.) You can find a list of supported languages and their 
-        suffixes in the supported languages section above.
+    3. Rename the page URLs for your site's pages (in manage pages, click the gear 
+        icon to the right of each page, then go to SEO & Settings and scroll down to 
+        'page  URL') to match their equivalent page's URL, but followed by an 
+        underscore and then the language suffix. For example: home becomes home_es, 
+        gallery becomes gallery_es, et cetera.) You can find a list of supported 
+        languages and their suffixes in the supported languages section above.
+        Note: The default home page's URL is always 'home', and cannot be changed. 
     4. Paste this script into the site's header (go to menu, then site settings, then
         header HTML)
     5. Add an HTML element in your site's header or footer and add the code:
-        <div class='multiLanguageRow'> 
+        <div class='multiLanguageRow'></div>
         to it. Where you place this code is where the multilanguage flags will show.
     6. Set the navigation to display 'all items'; Go to design -> navigation -> 
         customize (under desktop) -> settings and in the 'Number of visible desktop 
