@@ -13,7 +13,7 @@
     -----------------------------HOW THIS SCRIPT WORKS--------------------------------
     This script creates a dropdown element from which visitors can select a language. 
     Doing so sends them to a page with the same name and a suffix matching the
-    selected language (_eng, _fra, etc.)  
+    selected language (_eng, _fra, etc.)
 
     The names in this dropdown will be displayed based on the suffix and order of 
     languages listed in the MLV.languages array.
@@ -30,12 +30,15 @@
         end up with, for example, three 'home' pages if you want your site to have 
         three languages. The page names can be whatever you wish (Incio, for example, 
         would be a good name for the home page in spanish)
-    3. Rename the page URLs for your site's pages (in manage pages, click the gear 
-        icon to the right of each page, then go to SEO & Settings and scroll down to 
-        'page  URL') to match their equivalent page's URL, but followed by an 
-        underscore and then the language suffix. For example: home becomes home_spa, 
-        gallery becomes gallery_spa, et cetera.) You can find a list of supported 
-        languages and their suffixes in the supported languages section above.
+    3. Rename the page URLs for all of your site's pages (in manage pages, click the 
+        gear icon to the right of each page, then go to SEO & Settings and scroll 
+        down to 'page  URL') to match their equivalent page's URL, but followed by an 
+        underscore and then the language suffix. 
+        For example: the home page becomes home_spa, gallery_eng becomes gallery_spa, 
+        et cetera.) The visible names of the pages can be whatever you like; only the 
+        URLs need to be customized in this way.
+        You can find a list of supported languages and their suffixes in the supported 
+        languages section above.
         Note: The default home page's URL is always 'home', and cannot be changed. 
     4. Paste this script into the site's header (go to menu, then site settings, then
         header HTML)
