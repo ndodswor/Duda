@@ -11,15 +11,15 @@
     'Customization' section.
 
     -----------------------------HOW THIS SCRIPT WORKS--------------------------------
-    This script sends visitors to pages on the site with the same name and the 
-    matching suffix (_eng, _fra, etc) when the corresponding lanuage name is selected
-    from the dropdown.
+    This script creates a dropdown element from which visitors can select a language. 
+    Doing so sends them to a page with the same name and a suffix matching the
+    selected language (_eng, _fra, etc.)  
 
     The names in this dropdown will be displayed based on the suffix and order of 
     languages listed in the MLV.languages array.
 
-    The script assumes that any page without a suffix was written in the language 
-    set in the MLV.defaultLanguage variable.
+    The script assumes that the home page was written in the language set in the 
+    MLV.defaultLanguage variable.
 
     When a user visits the site again after leaving, a cookie (with default duration
     of one day) will direct them to the appropriate language home page.
