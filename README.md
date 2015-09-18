@@ -42,12 +42,11 @@
         Note: The default home page's URL is always 'home', and cannot be changed. 
     4. Paste this script into the site's header (go to menu, then site settings, then
         header HTML)
-    5. Add an HTML element in your site's header or footer and add the code:
+    5. Add an HTML element in your site's header and footer and add the code:
         <div class='multiLanguageRow'></div>
         to it. Where you place this code is where the multilanguage dropdown will show.
-        Please note that if you put this code in the header of your site, it will not
-        appear on the mobile version (as DudaOne's mobile sites do not allow code
-        to be added to the header using this element)
+        Please note that this will not show up in the header of the mobile site due
+        to limitations of the platform.
     6. Set the navigation to display 'all items'; Go to design -> navigation -> 
         customize (under desktop) -> settings and in the 'Number of visible desktop 
         navigation items' dropdown, select 'all items'.
@@ -55,7 +54,7 @@
         and the mobile navigation to 'slide', 'list' (the multiple boxes), or 
         'expanded' (the single box at the top right). Please refer to 'supported
         navigation themes.png' in this repository if this is unclear; navigation 
-        styles with red borders are unsupported.
+        styles with red borders are not supported.
     9. Change the MLV.languages array to contain the suffixes of languages of the 
         pages you've added in the order you wish them to display
     10. Change the MLV.defaultLanguage variable to the suffix of the default language
