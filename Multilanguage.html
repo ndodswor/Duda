@@ -1,254 +1,262 @@
 <script>
-    /*----------MULTILANGUAGE script for DUDAONE [BETA 0.01 Edition] ------------------
-    This script allows site visitors to easily switch between displayed languages in 
-    a site using a dropdown by selecting the desired language's name. Page content 
-    and its translations must be created by the user. 
+/*----------MULTILANGUAGE script for DUDAONE [BETA 0.01 Edition] ------------------
+This script allows site visitors to easily switch between displayed languages in
+a site using a dropdown by selecting the desired language's name. Page content
+and its translations must be created by the user.
 
-    Please read this project's github wiki for information about installing, 
-    configuring, and troubleshooting it:
+Please read this project's github wiki for information about installing,
+configuring, and troubleshooting it:
 
-    https://github.com/ndodswor/Multilanguage/wiki
+https://github.com/ndodswor/Multilanguage/wiki
+---------------------------------------------------------------------------------*/
+/*-------------------------------MLV Namespace-------------------------------------
+Values used to store and set information. These are wrapped into MLV (short for
+'Multi Language Variables') to conserve global namespace. All functions and
+variables used by this script are limited to this namespace.
+---------------------------------------------------------------------------------*/
+var MLV = {}; // multi-language variable namespace
+MLV.defaultLanguage = "eng"; //this language will be assumed to have no suffix
+MLV.languages = ["eng", "zho", "fra", "spa"];  //full list of languages
+MLV.languageName = {ara:"العربية", //arabic
+                    zho:"國語", //chinese
+                    cze:"Čeština", //czech
+                    deu:"Deutsch", //german
+                    eng:"English", //english
+                    fra:"Français", //french
+                    ell:"ελληνικά", //greek
+                    ind:"Bahasa Indonesia", //indonesian
+                    jpn:"日本語", //japanese
+                    kor:"조선말", //korean
+                    fas:"فارسی", //persian
+                    pol:"język polski", //polish
+                    vie:"Việt Nam", //vietnamese
+                    por:"Português", //portuguese
+                    rus:"Русский", //russian
+                    spa:"Español", //spanish
+                    swe:"Svenska", //swedish
+                    tur:"Türkçe" //turkish
+}; // add more language definitions here
 
-    /*-------------------------------MLV Namespace-------------------------------------
-    Values used to store and set information. These are wrapped into MLV (short for 
-    'Multi Language Variables') to conserve global namespace. All functions and
-    variables used by this script are limited to this namespace.
-    ---------------------------------------------------------------------------------*/ 
-    var MLV = {}; // multi-language variable namespace
-    MLV.defaultLanguage = "eng"; //this language will be assumed to have no suffix
-    MLV.languages = ["eng", "zho", "fra", "spa"];  //full list of languages
-    MLV.languageName = {"ara":"العربية", //arabic
-                        "zho":"國語" //chinese
-                        "cze":"Čeština", //czech
-                        "deu":"Deutsch", //german
-                        "eng":"English", //english
-                        "fra":"Français", //french
-                        "ell":"ελληνικά" //greek
-                        "ind":"Bahasa Indonesia", //indonesian
-                        "jpn":"日本語", //japanese
-                        "kor":"조선말", //korean
-                        "fas":"فارسی", //persian
-                        "pol":"język polski", //polish
-                        "vie":"Việt Nam", //vietnamese
-                        "por":"Português", //portuguese
-                        "rus":"Русский", //russian
-                        "spa":"Español", //spanish
-                        "swe":"Svenska", //swedish
-                        "tur":"Türkçe", //turkish
-    }; // add more language definitions here
-   
-    /*------------------------cookieHandler class-------------------------------------
-    set of functions to set/read cookies to store the active language across sessions
-    put in this namespace to prevent potential function/variable collision.
-    --------------------------------------------------------------------------------*/       
-    MLV.cookieHandler = { //class declaration
+/*------------------------cookieHandler class-------------------------------------
+set of functions to set/read cookies to store the active language across sessions
+put in this namespace to prevent potential function/variable collision.
+--------------------------------------------------------------------------------*/
+MLV.cookieHandler = { //class declaration
 
-        //FUNCTION: gets the cookie data from the browser
-        getCookie: function() {
-            var langCookie = document.cookie.replace(/(?:(?:^|.*;\s*)CurrLanguage\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-            return langCookie;
-        },
-        //FUNCTION: sets a cookie designating the current language of that user for the site
-        setCookie: function(lang, days) {
-            if (!days) {
-                var days = 1;
-            }
-            var d = new Date();
-            d.setTime(d.getTime() + (days * 60 * 60 * 24 * 1000));
-            document.cookie = "CurrLanguage=" + lang + ";expires=" + d.toGMTString() + ";path=/";
-            console.log("cookie set");
-        },
-        //FUNCTION: changes page based on language selection if necessary
-        selectLang: function(lang) {
-            var basePagePath = ""; 
-            console.log('Setting language to ' + lang);
-            //if the suffix already matches the selected language, don't do anything
-            if (MLV.cookieHandler.getCookie() === lang.toString()) {
-                console.log("same lang, no page change needed");
-            //otherwise, set the cookie and change the page appropriately
-            } else if (MLV.cookieHandler.getCookie() != lang) {
-                MLV.cookieHandler.setCookie(lang);
-                var basePage = MLV.cookieHandler.stripPageSuffix(window.location.pathname);
-                //if the base page is blank, send user to the home page
-                if(basePage === "/")
-                {
-                    basePage = "/home"
-                }
-                //if the language isn't default or it's not the home page, add the suffix.
-                if(basePage !== "/home" || lang !== MLV.defaultLanguage)
-                {
-                    basePage = basePage + MLV.cookieHandler.getPageSuffix(lang);
-                }
-                //preserve any URL parameters
-                basePagePath = basePage + window.location.search;
-                //switch the page
-                window.location.replace(basePagePath);
-            }
-        },
-        /*FUNCTION: return whether or not the string ends with the suffix. If there's no 
-        suffix, return true only if the default language is enabled. */
-        doesPageEndWith: function(str, suffix) {
-            //if there is no explicit suffix and the default language is enabled
-            if(str.indexOf("_") === -1 && ( suffix === MLV.cookieHandler.getPageSuffix(MLV.defaultLanguage) || 
-                suffix === ""))
-            { 
-                return true;
-            }
-            else if(str.indexOf("_") !== -1 && suffix !== "") 
-            {   //Otherwise, if the suffix matches the current language, return true
-                return str.indexOf(suffix, str.length - suffix.length) !== -1;
-            }
-            //if neither, return false
-            else
+    //FUNCTION: gets the cookie data from the browser
+    getCookie: function() {
+        'use strict';
+        var langCookie = document.cookie.replace(/(?:(?:^|.*;\s*)CurrLanguage\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        return langCookie;
+    },
+    //FUNCTION: sets a cookie designating the current language of that user for the site
+    setCookie: function(lang, days) {
+        'use strict';
+        if (!days) {
+            days = 1;
+        }
+        var d = new Date();
+        d.setTime(d.getTime() + (days * 60 * 60 * 24 * 1000));
+        document.cookie = "CurrLanguage=" + lang + ";expires=" + d.toGMTString() + ";path=/";
+        console.log("cookie set");
+    },
+    //FUNCTION: changes page based on language selection if necessary
+    selectLang: function(lang) {
+        'use strict';
+        var basePagePath = "";
+        console.log('Setting language to ' + lang);
+        //if the suffix already matches the selected language, don't do anything
+        if (MLV.cookieHandler.getCookie() === lang.toString()) {
+            console.log("same lang, no page change needed");
+        //otherwise, set the cookie and change the page appropriately
+        } else if (MLV.cookieHandler.getCookie() !== lang) {
+            MLV.cookieHandler.setCookie(lang);
+            var basePage = MLV.cookieHandler.stripPageSuffix(window.location.pathname);
+            //if the base page is blank, send user to the home page
+            if(basePage === "/")
             {
-                return false;
+                basePage = "/home";
             }
-        },
-        //FUNCTION: given the language suffix, return the appropriate page suffix
-        getPageSuffix: function(lang) {
-            if(typeof lang === undefined)
+            //if the language isn't default or it's not the home page, add the suffix.
+            if(basePage !== "/home" || lang !== MLV.defaultLanguage)
             {
-                return "_" + MLV.defaultLanguage;
+                basePage = basePage + MLV.cookieHandler.getPageSuffix(lang);
             }
-            return "_" + lang;
-        },
-        //FUNCTION: strip the _ from the suffix
-        stripPageSuffix: function(pagePath1) {
-            return pagePath1.split("_")[0];
-        },
-        //FUNCTION: show the navigation elements for the current language
-        showMatchingLanguageNavElements: function() {
-            $(document).ready(function() {
-                //once the DOM has loaded, check each navWrapper div
-                $('.dmNavWrapper li a').each(function() {
-                    if ($(this).attr('href') !== undefined) {
-                        //and if it has a href, check if it matches the current language
-                        if (MLV.cookieHandler.doesPageEndWith($(this).attr('href'), 
-                            MLV.cookieHandler.getPageSuffix(MLV.cookieHandler.getCookie()))) {
-                            $(this).parents("li").css("display", "inline-block");
-                        }
-                        else
-                        {
-                            //if it doesn't, keep it hidden.
-                            $(this).parents("li").css("display", "none");
-                        } 
+            //preserve any URL parameters
+            basePagePath = basePage + window.location.search;
+            //switch the page
+            window.location.replace(basePagePath);
+        }
+    },
+    /*FUNCTION: return whether or not the string ends with the suffix. If there's no
+    suffix, return true only if the default language is enabled. */
+    doesPageEndWith: function(str, suffix) {
+        'use strict';
+        //if there is no explicit suffix and the default language is enabled
+        if(str.indexOf("_") === -1 && ( suffix === MLV.cookieHandler.getPageSuffix(MLV.defaultLanguage) ||
+            suffix === ""))
+        {
+            return true;
+        }
+        else if(str.indexOf("_") !== -1 && suffix !== "")
+        {   //Otherwise, if the suffix matches the current language, return true
+            return str.indexOf(suffix, str.length - suffix.length) !== -1;
+        }
+        //if neither, return false
+        else
+        {
+            return false;
+        }
+    },
+    //FUNCTION: given the language suffix, return the appropriate page suffix
+    getPageSuffix: function(lang) {
+        'use strict';
+        if(typeof lang === undefined)
+        {
+            return "_" + MLV.defaultLanguage;
+        }
+        return "_" + lang;
+    },
+    //FUNCTION: strip the _ from the suffix
+    stripPageSuffix: function(pagePath1) {
+        'use strict';
+        return pagePath1.split("_")[0];
+    },
+    //FUNCTION: show the navigation elements for the current language
+    showMatchingLanguageNavElements: function() {
+        'use strict';
+        $(document).ready(function() {
+            //once the DOM has loaded, check each navWrapper div
+            $('.dmNavWrapper li a').each(function() {
+                if ($(this).attr('href') !== undefined) {
+                    //and if it has a href, check if it matches the current language
+                    if (MLV.cookieHandler.doesPageEndWith($(this).attr('href'),
+                        MLV.cookieHandler.getPageSuffix(MLV.cookieHandler.getCookie()))) {
+                        $(this).parents("li").css("display", "inline-block");
                     }
-                });
-            });
-        },
-        //load the appropriate page and language
-        pageLoad: function() {
-            //If there isn't yet a cookie, set one for the default language
-            var cookieLang = MLV.cookieHandler.getCookie();
-            if (cookieLang === 'undefined' || MLV.languages.indexOf(cookieLang) < 0) {
-                MLV.cookieHandler.setCookie(MLV.defaultLanguage);
-                console.log('Language did not match available languages. (' + cookieLang + 
-                    ') Setting Language to ' + MLV.defaultLanguage);
-            } else if (!MLV.cookieHandler.doesPageEndWith(window.location.pathname, 
-                MLV.cookieHandler.getPageSuffix(cookieLang)) && cookieLang != 0) {
-                //otherwise, display the appropriate page for the language used
-                var basePage = MLV.cookieHandler.stripPageSuffix(window.location.pathname);
-                //if it's the home page, add /home
-                if (basePage === '/') {
-                    basePage = '/home';
+                    else
+                    {
+                        //if it doesn't, keep it hidden.
+                        $(this).parents("li").css("display", "none");
+                    }
                 }
-                //construct the appropriate page URL and replace the current page with it
-                var basePagePath = basePage + MLV.cookieHandler.getPageSuffix(cookieLang) + 
-                window.location.search;
-                window.location.replace(basePagePath);
-            }
-            MLV.cookieHandler.showMatchingLanguageNavElements();
-        },
-        //generates the HTML structure for the dropdown
-        generateLanguageListHTML: function() {
-            var languageListHTML = "";
-            //for each active language, generate an option. Mark the currently selected language.
-            var gix; //iterator
-            for(gix = 0; gix < MLV.languages.length; gix+=1) {
-                languageListHTML = languageListHTML + 
-                "<option class=\"language_selection_anchor " + "\" value=\"" + MLV.languages[gix] + 
-                //if the language is currently selected, label it 'selected'.
-                "\"" + MLV.functions.isSelected(gix) + 
-                //print the name of the language for the viewer.
-                ">" + MLV.languageName[MLV.languages[gix]] + 
-                "</option>";
-            }
-            return languageListHTML;
-        }
-    }
-
-    /*------------------------Functions class-----------------------------------------
-    Functions which do not fit into the cookieHandler namespace
-    --------------------------------------------------------------------------------*/   
-    
-   
-    MLV.functions = { //class declaration
-         //logs which language should be selected then call MLV.cookieHandler's selectlanguage function
-        changeLanguage: function(sel) {
-            console.log("changeLanguage called with value " + sel);
-            MLV.cookieHandler.selectLang(sel);
-        },
-        //returns selected if the index of the language in question is the default language
-        isSelected: function(index) {
-            return (MLV.languages[index] === MLV.cookieHandler.getCookie()) ? "selected" : "";
-        }
-    }
-    /*------------------------Main Function-------------------------------------------
-    Sets all of the above functions into motion so they do something on the page.
-    --------------------------------------------------------------------------------*/ 
-   //don't load if inside the editor
-    if(window.editorParent.$)
-    {   //show the placeholder
-        $(function(){
-            $('.multiLanguageRow').append('<div class="language_selection_placeholder"></div>')
-        })
-        //hide the navigation by default
-        $('head').append('<style>li.navListLi{display:inline-block !important;}</style>');
-    }
-    else
-    {
-        //add the language interface on page load
-        MLV.cookieHandler.pageLoad();
-        $(function() {
-            //add the wrapper to the row
-            $('.multiLanguageRow').append('<div class="language_selection_wrapper">' + 
-                '<select class="language_selection_dropdown" onchange="MLV.functions.changeLanguage(this.value)">' + 
-                MLV.cookieHandler.generateLanguageListHTML() + 
-                '</select></div>');
-            var temp = $('.language_selection_wrapper').find('.language_selection_anchor')
-            temp.eq(MLV.languages.indexOf(MLV.cookieHandler.getCookie())).addClass('active').attr('title', '');
-            console.log("Current Language : " + MLV.cookieHandler.getCookie());
-             $('body').on('click', '.language_selection_anchor', function() {
-                MLV.functions.changeLanguage($(this));
-            }); 
+            });
         });
+    },
+    //load the appropriate page and language
+    pageLoad: function() {
+        'use strict';
+        //If there isn't yet a cookie, set one for the default language
+        var cookieLang = MLV.cookieHandler.getCookie();
+        if (cookieLang === 'undefined' || MLV.languages.indexOf(cookieLang) < 0) {
+            MLV.cookieHandler.setCookie(MLV.defaultLanguage);
+            console.log('Language did not match available languages. (' + cookieLang +
+                ') Setting Language to ' + MLV.defaultLanguage);
+        } else if (!MLV.cookieHandler.doesPageEndWith(window.location.pathname,
+            MLV.cookieHandler.getPageSuffix(cookieLang)) && cookieLang != 0) {
+            //otherwise, display the appropriate page for the language used
+            var basePage = MLV.cookieHandler.stripPageSuffix(window.location.pathname);
+            //if it's the home page, add /home
+            if (basePage === '/') {
+                basePage = '/home';
+            }
+            //construct the appropriate page URL and replace the current page with it
+            var basePagePath = basePage + MLV.cookieHandler.getPageSuffix(cookieLang) +
+            window.location.search;
+            window.location.replace(basePagePath);
+        }
+        MLV.cookieHandler.showMatchingLanguageNavElements();
+    },
+    //generates the HTML structure for the dropdown
+    generateLanguageListHTML: function() {
+        'use strict';
+        var languageListHTML = "";
+        //for each active language, generate an option. Mark the currently selected language.
+        var gix; //iterator
+        for(gix = 0; gix < MLV.languages.length; gix+=1) {
+            languageListHTML = languageListHTML +
+            "<option class=\"language_selection_anchor " + "\" value=\"" + MLV.languages[gix] +
+            "\"" + MLV.functions.isSelected(gix) +
+            ">" + MLV.languageName[MLV.languages[gix]] +
+            "</option>";
+        }
+        return languageListHTML;
     }
-  </script>
-  <!-- Styles for MultiLanguage Interface -->
-  <style>  
+}
 
-    .language_selection_placeholder:after 
-    {
-        font-family: arial;
-        content: "Multi Language Element Will Appear Here";
-        font-size: 16px;
-        font-color: black;
-        font-weight: bold;
-        background-color: #BBBBBB;
-        border-radius: 3px;
-        padding: 3px;
-    }
-    li.navListLi 
-    {
-        display:none;
-    }
-    div.multiLanguageRow select.language_selection_dropdown 
-    {
-        width: auto;
-    }
-    div.multiLanguageRow 
-    {
-        text-align: right;
-    }
+/*------------------------Functions class-----------------------------------------
+Functions which do not fit into the cookieHandler namespace
+--------------------------------------------------------------------------------*/
 
-  </style>
+MLV.functions = { //class declaration
+     //logs which language should be selected then call MLV.cookieHandler's selectlanguage function
+    changeLanguage: function(sel) {
+        'use strict';
+        console.log("changeLanguage called with value " + sel);
+        MLV.cookieHandler.selectLang(sel);
+    },
+    //returns selected if the index of the language in question is the default language
+    isSelected: function(index) {
+        'use strict';
+        return (MLV.languages[index] === MLV.cookieHandler.getCookie()) ? "selected" : "";
+    }
+}
+/*------------------------Main Function-------------------------------------------
+Sets all of the above functions into motion so they do something on the page.
+--------------------------------------------------------------------------------*/
+//don't load if inside the editor
+if(window.editorParent.$)
+{   //show the placeholder
+    $(function(){
+        'use strict';
+        $('.multiLanguageRow').append('<div class="language_selection_placeholder"></div>');
+    })
+    //hide the navigation by default
+    $('head').append('<style>li.navListLi{display:inline-block !important;}</style>');
+}
+else
+{
+    //add the language interface on page load
+    MLV.cookieHandler.pageLoad();
+    $(function() {
+        'use strict';
+        //add the wrapper to the row
+        $('.multiLanguageRow').append('<div class="language_selection_wrapper">' +
+            '<select class="language_selection_dropdown" onchange="MLV.functions.changeLanguage(this.value)">' +
+            MLV.cookieHandler.generateLanguageListHTML() +
+            '</select></div>');
+        var temp = $('.language_selection_wrapper').find('.language_selection_anchor');
+        temp.eq(MLV.languages.indexOf(MLV.cookieHandler.getCookie())).addClass('active').attr('title', '');
+        console.log("Current Language : " + MLV.cookieHandler.getCookie());
+         $('body').on('click', '.language_selection_anchor', function() {
+            MLV.functions.changeLanguage($(this));
+        });
+    });
+}
+</script>
+<!-- Styles for MultiLanguage Interface -->
+<style>
+.language_selection_placeholder:after
+{
+    font-family: arial;
+    content: "Multi Language Element Will Appear Here";
+    font-size: 16px;
+    font-color: black;
+    font-weight: bold;
+    background-color: #BBBBBB;
+    border-radius: 3px;
+    padding: 3px;
+}
+li.navListLi
+{
+    display:none;
+}
+div.multiLanguageRow select.language_selection_dropdown
+{
+    width: auto;
+}
+div.multiLanguageRow
+{
+    text-align: right;
+}
+</style>
